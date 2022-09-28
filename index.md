@@ -15,3 +15,5 @@ Hello Everyone! I can see you~ I can hear you~
 # code block
 println
 ```
+
+[Lab Report 1](https://lucaszhang2.github.io/cse15l-lab-reports/lab-report-1-week-0.html)
