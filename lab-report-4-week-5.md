@@ -7,7 +7,7 @@ No.1 `find directory -empty`
 This command will find the empty files and directories in the directory we put in, and if we just use `find -empty`, it will search under current directory
 
 ```
-# code block
+# code block Example 1
 [ruz026@ieng6-202]:technical:198$ ls
 911report  biomed  government  plos
 [ruz026@ieng6-202]:technical:199$ find -empty
@@ -23,6 +23,37 @@ This command will find the empty files and directories in the directory we put i
 
 This means that there is no empty files or directories in the technical file. It is useful because when we are working with many files, empty files are usually usuless, so we want to find them out and ignore them. 
 
+```
+# code block Example 2
+[ruz026@ieng6-203]:technical:446$ ls
+911report  biomed  government  plos
+[ruz026@ieng6-203]:technical:447$ vim nothing.txt
+[ruz026@ieng6-203]:technical:448$ [ruz026@ieng6-203]:technical:448$ find -empty
+./nothing.txt
+[ruz026@ieng6-203]:technical:449$
+```
+![image](find-empty-ex2.png)
+
+So here I create a new empty file called nothing.txt with vim and now search with the command, and it gives me exact this empty file because this is the only empty file under current directory. 
+
+```
+# code block Example 3
+[ruz026@ieng6-203]:911report:467$ vim nothing-2.txt
+[ruz026@ieng6-203]:911report:468$ [ruz026@ieng6-203]:911report:468$ cd ~
+[ruz026@ieng6-203]:~:469$ cd docsearch
+[ruz026@ieng6-203]:docsearch:470$ cd technical
+[ruz026@ieng6-203]:technical:471$ ls
+911report  biomed  government  nothing.txt  plos
+[ruz026@ieng6-203]:technical:472$ find -empty
+./911report/nothing-2.txt
+./nothing.txt
+[ruz026@ieng6-203]:technical:473$
+```
+
+![image](find-empty-ex3.png)
+
+So here I create a new empty file called nothing-2.txt under the 911report directory under technical and then called the command in the technical directory, and we can see the it gives back both two files, which means that it searches for all sub-directory under current directory. 
+
 ---
 
 No.2 `find directory -name filename -exec rm -i {} \; `
@@ -30,7 +61,7 @@ No.2 `find directory -name filename -exec rm -i {} \; `
 This command will find the file that has the file name we put in (or multiple files if there are) and delete the file with comfirmation. And it will ask for confirmation before deleting. If we want to delete, type in Y for yes, if not, N for no. 
 
 ```
-# code block
+# code block Example 1
 [ruz026@ieng6-202]:technical:208$ find -name *report.txt -exec rm -i {} \;
 rm: remove regular file './government/About_LSC/Progress_report.txt'? n
 rm: remove regular file './government/About_LSC/Strategic_report.txt'? N
@@ -42,6 +73,40 @@ rm: remove regular file './government/About_LSC/commission_report.txt'? n
 
 I type no because this is just a show of command and I don't actually want to delete these files. It is useful because sometimes we want to delete some files that we know what they are but we don't know where they are, or we want to delete multiple files that contains same character in their names, and this command can be used. 
 
+```
+# code block Example 2
+[ruz026@ieng6-203]:technical:479$ find -name nothing-2.txt -exec rm -i {} \;
+rm: remove regular empty file './911report/nothing-2.txt'? y
+[ruz026@ieng6-203]:technical:480$ ls
+911report  biomed  government  nothing.txt  plos
+[ruz026@ieng6-203]:technical:481$ cd 911report
+[ruz026@ieng6-203]:911report:482$ ls
+chapter-1.txt   chapter-12.txt    chapter-13.3.txt  chapter-2.txt  chapter-6.txt  chapter-9.txt
+chapter-10.txt  chapter-13.1.txt  chapter-13.4.txt  chapter-3.txt  chapter-7.txt  preface.txt
+chapter-11.txt  chapter-13.2.txt  chapter-13.5.txt  chapter-5.txt  chapter-8.txt
+[ruz026@ieng6-203]:911report:483$
+```
+
+![image](find-name-rm-ex2.png)
+
+Here I delete nothing-2.txt that I created to show the `find -empty` command with this command. We can see that it precisely remove the file under 911report. 
+
+```
+# code block Example 3
+[ruz026@ieng6-203]:docsearch:485$ cd technical
+[ruz026@ieng6-203]:technical:486$ ls
+911report  biomed  government  nothing.txt  plos
+[ruz026@ieng6-203]:technical:487$ find -name nothing.txt -exec rm -i {} \;
+rm: remove regular empty file './nothing.txt'? y
+[ruz026@ieng6-203]:technical:488$ ls
+911report  biomed  government  plos
+[ruz026@ieng6-203]:technical:489$
+```
+
+![image](find-name-rm-ex3.png)
+
+Similarly, I delete nothing.txt that I created before. 
+
 ---
 
 No.3 `find . -atime +n`
@@ -49,7 +114,7 @@ No.3 `find . -atime +n`
 This command will find all the files under current directory that was last accessed more than n days ago. We can change `+` to `-` for less than n days ago. We can also change the `.` part to any directory as we want, or use this `atime` command with other commands together to fulfill our needs. Moreover, `atime` stands for days, and `amin` stands for minutes. 
 
 ```
-# code block
+# code block Example 1
 [ruz026@ieng6-202]:technical:221$ find . -amin -5
 [ruz026@ieng6-202]:technical:222$ find . -atime -2
 .
@@ -68,6 +133,36 @@ This command will find all the files under current directory that was last acces
 ![image](find-atime.png)
 
 This means that no file has been accessed in less than 5 minutes, and those files shown were accessed in less than 2 days. This command is useful when we are working in a long time period and want to find files by time. 
+
+```
+# code block Example 2
+[ruz026@ieng6-202]:technical:504$ find . -amin -10
+.
+./911report
+./biomed
+./government
+./government/About_LSC
+./government/Alcohol_Problems
+./government/Env_Prot_Agen
+./government/Gen_Account_Office
+./government/Media
+./government/Post_Rate_Comm
+./plos
+[ruz026@ieng6-202]:technical:505$
+```
+
+![image](fin-atime-ex2.png)
+
+So here I try to find all the files that have been accessed in less that 10 minutes ago. 
+
+```
+# code block Example 3
+[ruz026@ieng6-202]:technical:505$ find . -atime +1
+```
+
+![image](find-atime-ex3.png)
+
+So here I try to find all the files that have been accessed in more that 1 day ago. And we can see that lots of files, nearly most of the files here are accessed in more than 1 day ago. 
 
 ---
 
